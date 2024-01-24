@@ -11,6 +11,6 @@ namespace Dentist.Models
         public DateTime Start { get; set; }
         public Duration Duration { get; set; }
         public bool IsAppointedByDentist { get; set; }
-        public bool IsCanceled { get; set; }
+        public bool IsCancelled { get; set; }
     }
 }
