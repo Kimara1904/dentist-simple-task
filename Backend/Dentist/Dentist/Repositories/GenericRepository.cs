@@ -23,7 +23,7 @@ namespace Dentist.Repositories
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public IQueryable<T> GetAllAsync()
+        public IQueryable<T> GetAll()
         {
             return _context.Set<T>();
         }

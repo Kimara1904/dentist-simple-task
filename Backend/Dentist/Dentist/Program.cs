@@ -1,6 +1,16 @@
+using AutoMapper;
 using Dentist.Infrastructure;
+using Dentist.Mapper;
+using Dentist.Repositories;
+using Dentist.Repositories.Interfaces;
+using Dentist.Services;
+using Dentist.Services.Interfaces;
+using Exceptions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,8 +59,47 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new PatientProfile());
+    mc.AddProfile(new AppointmentProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 builder.Services.AddDbContext<DentistDatabaseContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DentistDB")));
 builder.Services.AddScoped<DbContext, DentistDatabaseContext>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IIdentificationService, IdentificationService>();
+builder.Services.AddScoped<IDentistService, DentistService>();
+builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<ExceptionHandler>();
+
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "")),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true
+    };
+});
 
 var app = builder.Build();
 
@@ -61,7 +110,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("MyAllowOrigins");
+
 app.UseAuthorization();
+app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandler>();
 
 app.MapControllers();
 

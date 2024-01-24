@@ -22,7 +22,7 @@ namespace Dentist.Services
 
         public async Task<string> Identification(string jmbg)
         {
-            var user = await _repository._userRepository.GetAllAsync()
+            var user = await _repository._userRepository.GetAll()
                 .Where(x => x.JMBG.Equals(jmbg))
                 .FirstOrDefaultAsync()
                 ?? throw new NotFoundException($"User with jmbg: {jmbg} doesn't exists");
