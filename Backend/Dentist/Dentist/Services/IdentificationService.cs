@@ -32,6 +32,7 @@ namespace Dentist.Services
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                         new Claim("UserId", user.Id.ToString()),
+                        new Claim("IdNumber", user.JMBG),
                         new Claim("Email", user.Email),
                         new Claim(ClaimTypes.Role, user.Role.ToString()),
                     };

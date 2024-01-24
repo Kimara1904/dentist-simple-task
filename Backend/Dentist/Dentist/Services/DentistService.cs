@@ -32,8 +32,7 @@ namespace Dentist.Services
 
 
             if (await _repository._appointmentRepository.GetAll()
-                .AnyAsync(x => !x.IsCancelled
-                && x.Start < newAppointment.Start.AddMinutes((double)newAppointment.Duration)
+                .AnyAsync(x => x.Start < newAppointment.Start.AddMinutes((double)newAppointment.Duration)
                 && x.Start.AddMinutes((double)x.Duration) > newAppointment.Start))
             {
                 throw new ConflictException($"There are no available appointments");
@@ -64,8 +63,7 @@ namespace Dentist.Services
             }
 
             if (await _repository._appointmentRepository.GetAll()
-                .AnyAsync(x => !x.IsCancelled
-                && x.Start < appointmentDTO.NewAppoint.Start.AddMinutes((double)appointmentDTO.NewAppoint.Duration)
+                .AnyAsync(x => x.Start < appointmentDTO.NewAppoint.Start.AddMinutes((double)appointmentDTO.NewAppoint.Duration)
                 && x.Start.AddMinutes((double)x.Duration) > appointmentDTO.NewAppoint.Start))
             {
                 throw new ConflictException($"There are no available appointments");
@@ -114,11 +112,21 @@ namespace Dentist.Services
         {
             var appointments = await _repository._appointmentRepository.GetAll()
                 .Include(x => x.Patient)
-                .Where(x => x.Start.Date == DateTime.Now.Date && !x.IsCancelled)
+                .Where(x => x.Start.Date == DateTime.Now.Date)
                 .ToListAsync();
 
             var returnValue = _mapper.Map<List<AppointmentDTO>>(appointments);
             return returnValue;
+        }
+
+        public async Task<List<PatientsAppointmentDTO>> GetAllForPatient(int id)
+        {
+            var appointments = await _repository._appointmentRepository.GetAll()
+                .Where(x => x.Id == id)
+                .ToListAsync();
+
+            var patientsAppointments = _mapper.Map<List<PatientsAppointmentDTO>>(appointments);
+            return patientsAppointments;
         }
 
         public async Task<List<AppointmentDTO>> GetAllForWeek()
@@ -128,8 +136,7 @@ namespace Dentist.Services
 
             var appointments = await _repository._appointmentRepository.GetAll()
                 .Include(x => x.Patient)
-                .Where(x => !x.IsCancelled
-                            && x.Start.Date >= currentDate
+                .Where(x => x.Start.Date >= currentDate
                             && x.Start.Date <= endDate
                             && x.Start.DayOfWeek != DayOfWeek.Saturday
                             && x.Start.DayOfWeek != DayOfWeek.Sunday)
@@ -137,6 +144,15 @@ namespace Dentist.Services
 
             var returnValue = _mapper.Map<List<AppointmentDTO>>(appointments);
             return returnValue;
+        }
+
+        public async Task<List<TakenAppointmentDTO>> GetTakenAppointments()
+        {
+            var appointments = await _repository._appointmentRepository.GetAll()
+                .ToListAsync();
+
+            var takenAppointments = _mapper.Map<List<TakenAppointmentDTO>>(appointments);
+            return takenAppointments;
         }
 
         public async Task<bool> IsAppointmentOfPatient(int id, string jmbg)
@@ -149,7 +165,7 @@ namespace Dentist.Services
 
             if (!appointment.Patient.JMBG.Equals(jmbg))
             {
-                throw new ConflictException($"Appointment with id: {id} is not yours");
+                return false;
             }
 
             return true;
