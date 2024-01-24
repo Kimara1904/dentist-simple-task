@@ -5,7 +5,10 @@ using Dentist.Repositories;
 using Dentist.Repositories.Interfaces;
 using Dentist.Services;
 using Dentist.Services.Interfaces;
+using Dentist.Validator;
 using Exceptions;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -76,6 +79,8 @@ builder.Services.AddScoped<IIdentificationService, IdentificationService>();
 builder.Services.AddScoped<IDentistService, DentistService>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<ExceptionHandler>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<BaseValidator>();
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
