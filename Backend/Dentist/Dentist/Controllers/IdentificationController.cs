@@ -1,4 +1,5 @@
-﻿using Dentist.Services.Interfaces;
+﻿using Dentist.DTOs;
+using Dentist.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace Dentist.Controllers
 
         [HttpPost("identify")]
         [AllowAnonymous]
-        public async Task<ActionResult<string>> Identify(string jmbg)
+        public async Task<ActionResult<TokenDTO>> Identify(string jmbg)
         {
             return Ok(await _identificationService.Identification(jmbg));
         }

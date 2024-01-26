@@ -1,7 +1,9 @@
-﻿namespace Dentist.Services.Interfaces
+﻿using Dentist.DTOs;
+
+namespace Dentist.Services.Interfaces
 {
     public interface IIdentificationService
     {
-        Task<string> Identification(string jmbg);
+        Task<TokenDTO> Identification(string jmbg);
     }
 }

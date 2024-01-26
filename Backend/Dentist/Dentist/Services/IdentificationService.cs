@@ -1,4 +1,5 @@
-﻿using Dentist.Repositories.Interfaces;
+﻿using Dentist.DTOs;
+using Dentist.Repositories.Interfaces;
 using Dentist.Services.Interfaces;
 using Exceptions.Exeptions;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace Dentist.Services
             _configuration = configuration;
         }
 
-        public async Task<string> Identification(string jmbg)
+        public async Task<TokenDTO> Identification(string jmbg)
         {
             var user = await _repository._userRepository.GetAll()
                 .Where(x => x.JMBG.Equals(jmbg))
@@ -46,7 +47,7 @@ namespace Dentist.Services
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: signIn);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new TokenDTO { Token = new JwtSecurityTokenHandler().WriteToken(token) };
         }
     }
 }
