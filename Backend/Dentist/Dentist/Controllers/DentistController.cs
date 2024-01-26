@@ -31,7 +31,7 @@ namespace Dentist.Controllers
             return Ok(await _dentistService.GetAllForDay());
         }
 
-        [HttpGet("patients")]
+        [HttpGet("patients-appoint")]
         [Authorize(Roles = "Patient")]
         public async Task<ActionResult<List<PatientsAppointmentDTO>>> GetPatientsAppointments()
         {
