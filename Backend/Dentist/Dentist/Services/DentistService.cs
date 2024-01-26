@@ -81,7 +81,7 @@ namespace Dentist.Services
             await _repository.SaveChanges();
 
             await _mailService.SendEmail("Appointment",
-                $"Patient {newUser.FirstName} {newUser.LastName}, {newUser.JMBG}, email: {newUser.Email} made appointment",
+                $"Patient {newUser.FirstName} {newUser.LastName}, {newUser.JMBG}, email: {newUser.Email} made appointment on {newAppointment.Start.Date} at {newAppointment.Start.Hour}:{newAppointment.Start.Minute} with duration of {newAppointment.Duration} minutes",
                 "zubar@dentist.com");
 
             return "Successfully made an appointment";
@@ -104,7 +104,7 @@ namespace Dentist.Services
             await _repository.SaveChanges();
 
             await _mailService.SendEmail("Appointment",
-                $"Appointment with id {id} is cancelled",
+                $"Appointment with id {id} on {appointment.Start.Date} at {appointment.Start.Hour}:{appointment.Start.Minute} is cancelled",
                 "zubar@dentist.com");
 
             return "Successfully cancelled appointment";
