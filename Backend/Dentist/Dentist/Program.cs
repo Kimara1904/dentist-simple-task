@@ -117,7 +117,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("MyAllowOrigins");
 
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandler>();

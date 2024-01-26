@@ -2,6 +2,7 @@
 using Dentist.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Dentist.Controllers
 {
@@ -31,7 +32,7 @@ namespace Dentist.Controllers
         }
 
         [HttpGet("patients")]
-        [Authorize]
+        [Authorize(Roles = "Patient")]
         public async Task<ActionResult<List<PatientsAppointmentDTO>>> GetPatientsAppointments()
         {
             var patientId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
@@ -67,10 +68,14 @@ namespace Dentist.Controllers
             var patientsJmbg = User.Claims.First(c => c.Type == "IdNumber").Value;
             if (User.IsInRole("Patient") && !await _dentistService.IsAppointmentOfPatient(id, patientsJmbg))
             {
-                return Forbid($"Appointment with id: {id} is not yours");
+                return new ContentResult
+                {
+                    StatusCode = 403,
+                    Content = $"Appointment with id: {id} is not yours",
+                    ContentType = "text/plain"
+                };
             }
-
-            return Ok(_dentistService.Cancel(id));
+            return Ok(await _dentistService.Cancel(id, User.FindFirst(ClaimTypes.Role)!.Value));
         }
     }
 }

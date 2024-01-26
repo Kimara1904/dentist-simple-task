@@ -36,7 +36,7 @@ namespace Dentist.Services
                         new Claim("Email", user.Email),
                         new Claim(ClaimTypes.Role, user.Role.ToString()),
                     };
-
+            var jwtkey = _configuration["Jwt:Key"];
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "default"));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(

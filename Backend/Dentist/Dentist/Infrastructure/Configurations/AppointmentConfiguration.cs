@@ -12,7 +12,7 @@ namespace Dentist.Infrastructure.Configurations
             builder.Property(x => x.DescriptionOfAppointment).IsRequired();
             builder.Property(x => x.Start).IsRequired();
             builder.Property(x => x.Duration).IsRequired();
-            builder.Property(x => x.IsAppointedByDentist).IsRequired();
+            builder.Property(x => x.WeekNumber).IsRequired();
             builder.Property(x => x.IsCancelled).HasDefaultValue(false);
             builder.HasOne(x => x.Patient).WithMany(x => x.Appointments).HasForeignKey(x => x.PatientId);
             builder.HasQueryFilter(x => !x.IsCancelled);

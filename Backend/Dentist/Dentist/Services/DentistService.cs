@@ -5,6 +5,7 @@ using Dentist.Repositories.Interfaces;
 using Dentist.Services.Interfaces;
 using Exceptions.Exeptions;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Dentist.Services
 {
@@ -70,6 +71,7 @@ namespace Dentist.Services
             }
 
             var newUser = _mapper.Map<User>(appointmentDTO.NewPatient);
+            newUser.Role = Enums.Role.Patient;
             await _repository._userRepository.Insert(newUser);
 
             var newAppointment = _mapper.Map<Appointment>(appointmentDTO.NewAppoint);
@@ -85,13 +87,13 @@ namespace Dentist.Services
             return "Successfully made an appointment";
         }
 
-        public async Task<string> Cancel(int id)
+        public async Task<string> Cancel(int id, string role)
         {
             var appointment = await _repository._appointmentRepository.FindAsync(id)
                 ?? throw new NotFoundException($"There is no appointment with id: {id}");
 
             _ = double.TryParse(_configuration["AppointmentCancelInHours"], out double cancelHours);
-            if (appointment.Start.AddHours(-cancelHours) < DateTime.Now)
+            if (role.Equals("Patient") && appointment.Start.AddHours(-cancelHours) < DateTime.Now)
             {
                 throw new ConflictException($"You can cancel up to {cancelHours} hours before the appointment");
             }
@@ -122,7 +124,7 @@ namespace Dentist.Services
         public async Task<List<PatientsAppointmentDTO>> GetAllForPatient(int id)
         {
             var appointments = await _repository._appointmentRepository.GetAll()
-                .Where(x => x.Id == id)
+                .Where(x => x.PatientId == id)
                 .ToListAsync();
 
             var patientsAppointments = _mapper.Map<List<PatientsAppointmentDTO>>(appointments);
@@ -131,15 +133,10 @@ namespace Dentist.Services
 
         public async Task<List<AppointmentDTO>> GetAllForWeek()
         {
-            DateTime currentDate = DateTime.Now.Date;
-            DateTime endDate = currentDate.AddDays(7);
-
+            var currentWeekNumber = DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             var appointments = await _repository._appointmentRepository.GetAll()
                 .Include(x => x.Patient)
-                .Where(x => x.Start.Date >= currentDate
-                            && x.Start.Date <= endDate
-                            && x.Start.DayOfWeek != DayOfWeek.Saturday
-                            && x.Start.DayOfWeek != DayOfWeek.Sunday)
+                .Where(x => x.WeekNumber == currentWeekNumber && x.Start.Year == DateTime.Now.Year)
                 .ToListAsync();
 
             var returnValue = _mapper.Map<List<AppointmentDTO>>(appointments);

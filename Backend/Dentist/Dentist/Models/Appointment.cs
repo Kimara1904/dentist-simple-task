@@ -10,7 +10,7 @@ namespace Dentist.Models
         public string DescriptionOfAppointment { get; set; } = null!;
         public DateTime Start { get; set; }
         public Duration Duration { get; set; }
-        public bool IsAppointedByDentist { get; set; }
+        public int WeekNumber { get; set; }
         public bool IsCancelled { get; set; }
     }
 }
