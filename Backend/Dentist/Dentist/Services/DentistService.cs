@@ -115,6 +115,7 @@ namespace Dentist.Services
             var appointments = await _repository._appointmentRepository.GetAll()
                 .Include(x => x.Patient)
                 .Where(x => x.Start.Date == DateTime.Now.Date)
+                .OrderBy(x => x.Start)
                 .ToListAsync();
 
             var returnValue = _mapper.Map<List<AppointmentDTO>>(appointments);
@@ -125,27 +126,38 @@ namespace Dentist.Services
         {
             var appointments = await _repository._appointmentRepository.GetAll()
                 .Where(x => x.PatientId == id)
+                .OrderBy(x => x.Start)
                 .ToListAsync();
 
             var patientsAppointments = _mapper.Map<List<PatientsAppointmentDTO>>(appointments);
+
             return patientsAppointments;
         }
 
-        public async Task<List<AppointmentDTO>> GetAllForWeek()
+        public async Task<Dictionary<DateTime, List<AppointmentDTO>>> GetAllForWeek()
         {
             var currentWeekNumber = DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
             var appointments = await _repository._appointmentRepository.GetAll()
                 .Include(x => x.Patient)
-                .Where(x => x.WeekNumber == currentWeekNumber && x.Start.Year == DateTime.Now.Year)
+                .Where(x => x.WeekNumber == currentWeekNumber
+                && x.Start.Year == DateTime.Now.Year
+                && x.Start.AddMinutes((double)x.Duration) > DateTime.Now)
                 .ToListAsync();
 
-            var returnValue = _mapper.Map<List<AppointmentDTO>>(appointments);
-            return returnValue;
+            var groupedAppointments = appointments.GroupBy(x => x.Start.Date);
+
+            var weekAppointments = groupedAppointments.ToDictionary(
+                group => group.Key,
+                _mapper.Map<List<AppointmentDTO>>
+                );
+
+            return weekAppointments;
         }
 
         public async Task<List<TakenAppointmentDTO>> GetTakenAppointments()
         {
             var appointments = await _repository._appointmentRepository.GetAll()
+                .OrderBy(x => x.Start)
                 .ToListAsync();
 
             var takenAppointments = _mapper.Map<List<TakenAppointmentDTO>>(appointments);

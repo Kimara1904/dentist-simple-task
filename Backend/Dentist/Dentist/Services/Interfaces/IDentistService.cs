@@ -7,7 +7,7 @@ namespace Dentist.Services.Interfaces
         Task<string> AppointWithJMBG(string jmbg, NewAppointDTO newAppointment);
         Task<string> AppointWithoutJMBG(AppointmentWithoutJmbgDTO appointmentDTO);
         Task<string> Cancel(int id, string role);
-        Task<List<AppointmentDTO>> GetAllForWeek();
+        Task<Dictionary<DateTime, List<AppointmentDTO>>> GetAllForWeek();
         Task<List<AppointmentDTO>> GetAllForDay();
         Task<bool> IsAppointmentOfPatient(int id, string jmbg);
         Task<List<PatientsAppointmentDTO>> GetAllForPatient(int id);

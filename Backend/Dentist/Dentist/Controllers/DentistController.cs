@@ -19,7 +19,7 @@ namespace Dentist.Controllers
 
         [HttpGet("week")]
         [Authorize(Roles = "Dentist")]
-        public async Task<ActionResult<List<AppointmentDTO>>> GetWeeklyAppointments()
+        public async Task<ActionResult<Dictionary<DateTime, List<AppointmentDTO>>>> GetWeeklyAppointments()
         {
             return Ok(await _dentistService.GetAllForWeek());
         }
