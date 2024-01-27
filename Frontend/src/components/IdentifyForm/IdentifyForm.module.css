@@ -1,0 +1,17 @@
+.div_identify_form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    background-color: white;
+}
+
+.identify_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: space-between;
+    background-color: var(--cream_color);
+    padding: 20px;
+    border-radius: 10px;
+}
