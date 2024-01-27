@@ -16,9 +16,9 @@ namespace Dentist.Controllers
             _identificationService = identificationService;
         }
 
-        [HttpPost("identify")]
+        [HttpGet("identify/{jmbg}")]
         [AllowAnonymous]
-        public async Task<ActionResult<TokenDTO>> Identify(string jmbg)
+        public async Task<ActionResult<TokenDTO>> Identify([FromRoute] string jmbg)
         {
             return Ok(await _identificationService.Identification(jmbg));
         }
