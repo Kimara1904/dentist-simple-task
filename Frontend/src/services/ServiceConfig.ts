@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const baseUrl = import.meta.env.BASE_URL
+export const baseUrl = import.meta.env.VITE_API_URL as string
 
 export const configureAxiosRequestInterceptors = () => {
   axios.interceptors.request.use(
