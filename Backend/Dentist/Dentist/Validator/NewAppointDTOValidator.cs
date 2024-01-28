@@ -15,8 +15,8 @@ namespace Dentist.Validator
                 .Must(s => s.Minute == 0 || s.Minute == 30).WithMessage("Start must be at full or half hour")
                 .Must(s => s > DateTime.Now).WithMessage("Time must be in future");
             RuleFor(a => a.Duration).NotEmpty()
-                .Must((a, d) => d == 30 || (d == 60 && a.Start.Hour != 18 && a.Start.Minute != 30))
-                .WithMessage("Duration must be 30 or 60 minutes. If the start is at 18:30, duration must be 30 minutes.");
+                .Must((a, d) => d == 30 || (d == 60 && a.Start.Hour != 16 && a.Start.Minute != 30))
+                .WithMessage("Duration must be 30 or 60 minutes. If the start is at 16:30, duration must be 30 minutes.");
         }
     }
 }

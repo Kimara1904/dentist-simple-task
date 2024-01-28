@@ -8,7 +8,12 @@ export interface AppointmentWithJmbgRequest {
 
 export interface AppointmentWithoutJmbgRequest {
   newPatient: PatientRequest
-  newAppointment: AppointmentWithJmbgRequest
+  newAppoint: AppointmentWithJmbgRequest
+}
+
+export interface AppointmentWithJmbgForDentistRequest {
+  jmbg: string
+  newAppoint: AppointmentWithJmbgRequest
 }
 
 export interface AppointmentResponse {

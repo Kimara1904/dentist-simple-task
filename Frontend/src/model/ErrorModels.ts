@@ -6,3 +6,11 @@ export interface ErrorData {
   StatusCode: number
   SupportMessage: string
 }
+
+export interface ValidationErrorData {
+  type: string
+  title: string
+  status: number
+  traceId: string
+  errors: Record<string, string[]>
+}

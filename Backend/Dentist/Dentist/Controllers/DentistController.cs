@@ -56,9 +56,9 @@ namespace Dentist.Controllers
 
         [HttpPost("appoint-with-jmbg-dentist")]
         [Authorize(Roles = "Dentist")]
-        public async Task<ActionResult<string>> MakeAppointWithJmbgForDentist([FromRoute] string patientsJmbg, [FromBody] NewAppointDTO newAppoint)
+        public async Task<ActionResult<string>> MakeAppointWithJmbgForDentist([FromBody] NewAppointmentJmbgDentistDTO newAppointDentist)
         {
-            return Ok(await _dentistService.AppointWithJMBG(patientsJmbg, newAppoint));
+            return Ok(await _dentistService.AppointWithJMBG(newAppointDentist.Jmbg, newAppointDentist.NewAppoint));
         }
 
         [HttpPost("appoint-without-jmbg")]

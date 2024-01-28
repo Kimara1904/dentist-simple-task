@@ -23,6 +23,7 @@ const AppContext = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [isIdentifyShown, setIsIdentifyShown] = useState(false)
   const [isSuccessIdentify, setIsSuccessIdentify] = useState(false)
+  const [alertText, setAlertText] = useState('')
 
   const navigation = useNavigate()
 
@@ -60,6 +61,12 @@ const AppContext = () => {
 
   const handleSuccessIdentify = () => {
     setIsSuccessIdentify(true)
+    setAlertText('Successfully identified')
+  }
+
+  const handleSetAlertText = (message: string) => {
+    setIsSuccessIdentify(true)
+    setAlertText(message)
   }
 
   return (
@@ -114,12 +121,14 @@ const AppContext = () => {
         </Toolbar>
       </AppBar>
       {isSuccessIdentify && (
-        <Alert onClose={() => setIsSuccessIdentify(false)}>
+        <Alert className='alert' onClose={() => setIsSuccessIdentify(false)}>
           <AlertTitle>Success</AlertTitle>
-          Successfully identified
+          {alertText}
         </Alert>
       )}
-      <AppRouter />
+      <div className={styles.main_div}>
+        <AppRouter onMakeAppointment={handleSetAlertText} />
+      </div>
       <Modal
         open={isIdentifyShown}
         onClose={handleIdentifyModalClose}

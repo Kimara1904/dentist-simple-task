@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import { baseUrl } from './ServiceConfig'
 import {
   AppointmentResponse,
+  AppointmentWithJmbgForDentistRequest,
   AppointmentWithJmbgRequest,
   AppointmentWithoutJmbgRequest,
   PatientsAppointmentResponse,
@@ -44,6 +45,12 @@ export const MakeAnAppointmentByNewPatient = async (
   request: AppointmentWithoutJmbgRequest
 ): Promise<AxiosResponse<string>> => {
   return axios.post<string>(`${url}/appoint-without-jmbg`, request)
+}
+
+export const MakeAnAppointmentByDentistJmbg = async (
+  request: AppointmentWithJmbgForDentistRequest
+): Promise<AxiosResponse<string>> => {
+  return axios.post<string>(`${url}/appoint-with-jmbg-dentist`, request)
 }
 
 export const CancelAppointment = async (id: number): Promise<AxiosResponse<string>> => {
