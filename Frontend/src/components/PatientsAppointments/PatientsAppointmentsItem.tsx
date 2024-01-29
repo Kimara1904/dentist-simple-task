@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { AxiosError, isAxiosError } from 'axios'
 import {
   Button,
   Dialog,
@@ -9,13 +10,12 @@ import {
   TableCell,
   TableRow
 } from '@mui/material'
-import { AxiosError, isAxiosError } from 'axios'
 
-import { AppointmentItemProperties } from '../../model/Properties'
+import { PatientsAppointmentItemProperties } from '../../model/Properties'
 import { CancelAppointment } from '../../services/AppointmentService'
 import { ErrorData } from '../../model/ErrorModels'
 
-const AppointmentItem = (props: AppointmentItemProperties) => {
+const PatientsAppointmentItem = (props: PatientsAppointmentItemProperties) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleOpenDialog = () => {
@@ -31,7 +31,7 @@ const AppointmentItem = (props: AppointmentItemProperties) => {
     CancelAppointment(props.appoint.id)
       .then((response) => {
         props.onCancel(response.data)
-        handleCloseDialog
+        handleCloseDialog()
       })
       .catch((error: AxiosError<ErrorData>) => {
         if (isAxiosError(error)) {
@@ -48,11 +48,14 @@ const AppointmentItem = (props: AppointmentItemProperties) => {
       }}
     >
       <TableCell>{props.appoint.id}</TableCell>
-      <TableCell>{props.appoint.patient.firstName}</TableCell>
-      <TableCell>{props.appoint.patient.lastName}</TableCell>
-      <TableCell>{props.appoint.patient.jmbg}</TableCell>
-      <TableCell>{props.appoint.patient.email}</TableCell>
       <TableCell>{props.appoint.descriptionOfAppointment}</TableCell>
+      <TableCell align='left'>
+        {new Date(props.appoint.start).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric'
+        })}
+      </TableCell>
       <TableCell>
         {new Date(props.appoint.start).toLocaleTimeString('en-US', {
           hour: '2-digit',
@@ -95,4 +98,4 @@ const AppointmentItem = (props: AppointmentItemProperties) => {
   )
 }
 
-export default AppointmentItem
+export default PatientsAppointmentItem

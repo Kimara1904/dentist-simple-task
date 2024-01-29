@@ -7,16 +7,15 @@ import {
   AppointmentWithJmbgRequest,
   AppointmentWithoutJmbgRequest,
   PatientsAppointmentResponse,
-  TakenAppointmentResponse,
-  WeeklyAppointmentResponse
+  TakenAppointmentResponse
 } from '../model/AppointmentModels'
 
 const url = `${baseUrl}/api/dentist`
 
 export const GetWeeklyAppointments = async (): Promise<
-  AxiosResponse<WeeklyAppointmentResponse>
+  AxiosResponse<Record<string, AppointmentResponse[]>>
 > => {
-  return axios.get<WeeklyAppointmentResponse>(`${url}/week`)
+  return axios.get<Record<string, AppointmentResponse[]>>(`${url}/week`)
 }
 
 export const GetDailyAppointments = async (): Promise<AxiosResponse<AppointmentResponse[]>> => {

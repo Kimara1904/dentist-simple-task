@@ -5,7 +5,15 @@ import {
 } from './AppointmentModels'
 
 export interface AppointmentItemProperties {
-  appoint: AppointmentResponse | PatientsAppointmentResponse
+  appoint: AppointmentResponse
+  onCancel: (message: string) => void
+  onError: (message: string) => void
+}
+
+export interface DailyAppointmentsProperties {
+  appoints: AppointmentResponse[]
+  onCancel: (message: string) => void
+  onError: (message: string) => void
 }
 
 export interface AppRouterProperties {
@@ -25,6 +33,18 @@ export interface IdentifyFormProperties {
   onSuccess: () => void
 }
 
-export interface TakenListProperites {
-  takenDates: TakenAppointmentResponse[]
+export interface TakenAppointmentItemProperties {
+  item: TakenAppointmentResponse
+}
+
+export interface PatientsAppointmentItemProperties {
+  appoint: PatientsAppointmentResponse
+  onCancel: (message: string) => void
+  onError: (message: string) => void
+}
+
+export interface PatientsAppointmentListProperties {
+  appoints: PatientsAppointmentResponse[]
+  onCancel: (message: string) => void
+  onError: (message: string) => void
 }

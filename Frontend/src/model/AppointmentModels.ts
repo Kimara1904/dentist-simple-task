@@ -36,7 +36,3 @@ export interface TakenAppointmentResponse {
   start: string
   end: string
 }
-
-export interface WeeklyAppointmentResponse {
-  [start: string]: AppointmentResponse[]
-}

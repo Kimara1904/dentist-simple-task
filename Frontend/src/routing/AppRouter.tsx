@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 
-import { isDentist } from '../helper/TokenHelper'
+import { isDentist, isIdentified } from '../helper/TokenHelper'
 import ViewAppointmentsPage from '../pages/ViewAppointmentsPage'
 import MakeAppointmentPage from '../pages/MakeAppointmentPage'
 import { AppRouterProperties } from '../model/Properties'
@@ -12,7 +12,10 @@ const AppRouter = (props: AppRouterProperties) => {
         path='/'
         element={isDentist() ? <Navigate to='/appoint-view' /> : <Navigate to='/new-appoint' />}
       />
-      <Route path='/appoint-view' element={<ViewAppointmentsPage />} />
+      <Route
+        path='/appoint-view'
+        element={isIdentified() ? <ViewAppointmentsPage /> : <Navigate to='/new-appoint' />}
+      />
       <Route
         path='/new-appoint'
         element={<MakeAppointmentPage onMakeAppointment={props.onMakeAppointment} />}

@@ -10,5 +10,5 @@ export interface PatientResponse {
   firstName: string
   lastName: string
   email: string
-  JMBG: string
+  jmbg: string
 }

@@ -102,16 +102,18 @@ const AppContext = () => {
             open={Boolean(anchorEl)}
             onClose={handleCloseMenu}
           >
-            <MenuItem onClick={handleNewAppointClick}>
-              <Typography textAlign='center'>Make Appointment</Typography>
-            </MenuItem>
-            <MenuItem onClick={handleViewAppointClick}>
-              <Typography textAlign='center'>View Appointments</Typography>
-            </MenuItem>
             {isIdentified() ? (
-              <MenuItem onClick={handleLogoutClick}>
-                <Typography textAlign='center'>Logout</Typography>
-              </MenuItem>
+              <>
+                <MenuItem onClick={handleNewAppointClick}>
+                  <Typography textAlign='center'>Make Appointment</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleViewAppointClick}>
+                  <Typography textAlign='center'>View Appointments</Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogoutClick}>
+                  <Typography textAlign='center'>Logout</Typography>
+                </MenuItem>
+              </>
             ) : (
               <MenuItem onClick={handleIdentifyClick}>
                 <Typography textAlign='center'>Identify</Typography>
